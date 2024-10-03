@@ -17,12 +17,6 @@ int main()
 {
   setlocale(LC_ALL, "Russian");
 
-  // Rhomb r1(Point{ 0, 0 }, Point{ 2, 0 }, Point{1, 1});
-  // Rhomb r2(Point{ 1, 0 }, Point{ 2, 1 }, Point{ 3, 0 });
-  // Rhomb r3(Point{ 5, 0 }, Point{ 6, 1 }, Point{ 7, 0 });
-
-  // cout << checkFigureCrossing(r1, r2) << " " << checkFigureCrossing(r1, r3);
-
   string help = "help - показать список команд.\n"
                 "\tgetPointsInLine - найти такую прямую, на которой лежат макс-ое кол-во точек.\n"
                 "\tgetMaxCirclePoint - найти точку, что окружность радиуса R с центром в ней захватит наибольшее количество точек.\n"
