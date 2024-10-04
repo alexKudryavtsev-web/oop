@@ -1,5 +1,6 @@
 #pragma once
 #include <cmath>
+#include <iostream>
 #include <algorithm>
 
 using namespace std;
@@ -23,7 +24,16 @@ public:
   {
     return y;
   }
+
+  friend std::istream& operator<<(std::istream& is, Point& person);
 };
+
+std::ostream& operator<<(std::ostream& os, const Point& obj) {
+    // Вывод значений полей объекта
+    os << "(" << obj.getX() << ", " << obj.getY() << ")"; 
+    return os;
+}
+
 
 double distance(const Point &p1, const Point &p2)
 {
