@@ -25,15 +25,15 @@ public:
     return y;
   }
 
-  friend std::istream& operator<<(std::istream& is, Point& person);
+  friend std::istream &operator<<(std::istream &is, Point &person);
 };
 
-std::ostream& operator<<(std::ostream& os, const Point& obj) {
-    // Вывод значений полей объекта
-    os << "(" << obj.getX() << ", " << obj.getY() << ")"; 
-    return os;
+std::ostream &operator<<(std::ostream &os, const Point &obj)
+{
+  // Вывод значений полей объекта
+  os << "(" << obj.getX() << ", " << obj.getY() << ")";
+  return os;
 }
-
 
 double distance(const Point &p1, const Point &p2)
 {
@@ -75,12 +75,32 @@ bool areCollinear(const Point &p1, const Point &p2, const Point &p3)
 }
 
 // L2:
+// return -1 as infinity lines
 int getPointsInLine(Point *points, int size, int **indices)
 {
-  if (size <= 1)
+  if (size == 1)
+  {
+    *indices = new int[0];
+    return size;
+  }
+  if (size < 1)
   {
     *indices = nullptr;
     return size;
+  }
+
+  for (int i = 0; i < size; i++)
+  {
+    for (int j = i + 1; j < size; j++)
+    {
+      Point p1 = points[i];
+      Point p2 = points[j];
+      if (p1.getX() == p2.getX() && p1.getY() == p2.getY())
+      {
+        *indices = nullptr;
+        return -1;
+      }
+    }
   }
 
   int maxCount = 2;

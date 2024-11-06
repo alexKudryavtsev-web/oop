@@ -1,16 +1,18 @@
 #pragma once
 #include "point.h"
 #include <cmath>
+#include <algorithm>
+#include <iostream>
 
 using namespace std;
 
 class Rhomb
 {
 private:
-  Point p1, p2, p3;
+  Point p1, p2, p3, p4;
 
 public:
-  Rhomb(const Point &p1, const Point &p2, const Point &p3) : p1(p1), p2(p2), p3(p3) {}
+  Rhomb(const Point &p1, const Point &p2, const Point &p3, const Point &p4) : p1(p1), p2(p2), p3(p3), p4(p4) {}
 
   double getPerimeter() const
   {
@@ -32,41 +34,69 @@ public:
     return 2 * areaTriangle1;
   }
 
+  bool isValid() const
+  {
+    if (distance(p1, p2) == 0 || distance(p2, p3) == 0 || distance(p3, p4) == 0 || distance(p4, p1) == 0)
+    {
+      return false;
+    }
+
+    return true;
+  }
+
   const Point &getP1() const { return p1; }
   const Point &getP2() const { return p2; }
   const Point &getP3() const { return p3; }
+  const Point &getP4() const { return p4; }
+
+  const Point &getPoint(int i) const
+  {
+    if (i == 0)
+      return p1;
+    if (i == 1)
+      return p2;
+    if (i == 2)
+      return p3;
+    if (i == 3)
+      return p4;
+  }
 };
 
-Point project(const Point &point, const Point &start, const Point &end);
-
-bool isPointOnSegment(const Point &point, const Point &start, const Point &end);
-
-// F4
-bool checkFigureCrossing(const Rhomb &f1, const Rhomb &f2)
+bool checkLineSegmentCrossing(const Point &p1, const Point &p2, const Point &p3, const Point &p4)
 {
-  Point p1 = f1.getP1();
-  Point p2 = f1.getP2();
-  Point p3 = f1.getP3();
+  // Вычисляем определитель
+  double denominator = (p2.getX() - p1.getX()) * (p4.getY() - p3.getY()) - (p2.getY() - p1.getY()) * (p4.getX() - p3.getX());
+  if (denominator == 0)
+  {
+    return false; // => параллельны
+  }
 
-  Point p4 = f2.getP1();
-  Point p5 = f2.getP2();
-  Point p6 = f2.getP3();
+  double numerator_t = (p4.getX() - p3.getX()) * (p1.getY() - p3.getY()) - (p4.getY() - p3.getY()) * (p1.getX() - p3.getX());
+  double numerator_u = (p2.getX() - p1.getX()) * (p1.getY() - p3.getY()) - (p2.getY() - p1.getY()) * (p1.getX() - p3.getX());
 
-  Point center1 = {(p1.getX() + p2.getX() + p3.getX()) / 3, (p1.getY() + p2.getY() + p3.getY()) / 3};
-  Point center2 = {(p4.getX() + p5.getX() + p6.getX()) / 3, (p4.getY() + p5.getY() + p6.getY()) / 3};
+  double t = numerator_t / denominator;
+  double u = numerator_u / denominator;
 
-  double radius1 = sqrt(pow(p1.getX() - center1.getX(), 2) + pow(p1.getY() - center1.getY(), 2));
-  double radius2 = sqrt(pow(p4.getX() - center2.getX(), 2) + pow(p4.getY() - center2.getY(), 2));
-
-  Point projection1 = project(center2, p1, p2);
-  Point projection2 = project(center1, p4, p5);
-
-  if (isPointOnSegment(projection1, p1, p2) && distance(projection1, center2) <= radius2)
+  // Проверка, пересекаются ли отрезки внутри
+  if ((t >= 0 && t <= 1) && (u >= 0 && u <= 1))
   {
     return true;
   }
 
-  if (isPointOnSegment(projection2, p4, p5) && distance(projection2, center1) <= radius1)
+  // Проверка, лежит ли конечная точка одного отрезка на другом отрезке
+  if ((p1.getX() == p3.getX() && p1.getY() == p3.getY()) || (p1.getX() == p4.getX() && p1.getY() == p4.getY()))
+  {
+    return true;
+  }
+  if ((p2.getX() == p3.getX() && p2.getY() == p3.getY()) || (p2.getX() == p4.getX() && p2.getY() == p4.getY()))
+  {
+    return true;
+  }
+  if ((p3.getX() == p1.getX() && p3.getY() == p1.getY()) || (p3.getX() == p2.getX() && p3.getY() == p2.getY()))
+  {
+    return true;
+  }
+  if ((p4.getX() == p1.getX() && p4.getY() == p1.getY()) || (p4.getX() == p2.getX() && p4.getY() == p2.getY()))
   {
     return true;
   }
@@ -74,30 +104,53 @@ bool checkFigureCrossing(const Rhomb &f1, const Rhomb &f2)
   return false;
 }
 
-Point project(const Point &point, const Point &start, const Point &end)
+double triangleArea(const Point &a, const Point &b, const Point &c)
 {
-  double dx = end.getX() - start.getX();
-  double dy = end.getY() - start.getY();
-  double len2 = dx * dx + dy * dy;
-  double dot = (point.getX() - start.getX()) * dx + (point.getY() - start.getY()) * dy;
-  double t = dot / len2;
-
-  if (t < 0)
-  {
-    return start;
-  }
-  else if (t > 1)
-  {
-    return end;
-  }
-  else
-  {
-    return {start.getX() + t * dx, start.getY() + t * dy};
-  }
+  return std::abs((a.getX() * (b.getY() - c.getY()) + b.getX() * (c.getY() - a.getY()) + c.getX() * (a.getY() - b.getY())) / 2.0);
 }
 
-bool isPointOnSegment(const Point &point, const Point &start, const Point &end)
+bool isPointInside(const Rhomb &rhomb, const Point &point)
 {
-  return (point.getX() >= min(start.getX(), end.getX()) && point.getX() <= max(start.getX(), end.getX()) &&
-          point.getY() >= min(start.getY(), end.getY()) && point.getY() <= max(start.getY(), end.getY()));
+  double area1 = triangleArea(rhomb.getP1(), rhomb.getP2(), point);
+  double area2 = triangleArea(rhomb.getP2(), rhomb.getP3(), point);
+  double area3 = triangleArea(rhomb.getP3(), rhomb.getP4(), point);
+  double area4 = triangleArea(rhomb.getP4(), rhomb.getP1(), point);
+
+  double totalArea = rhomb.getArea();
+
+  return std::abs(area1 + area2 + area3 + area4 - totalArea) < 0.0001; // Малая погрешность
+}
+
+// F4
+bool checkFigureCrossing(const Rhomb &f1, const Rhomb &f2)
+{
+  // Проверка пересечения сторон ромбов
+  for (int i = 0; i < 4; ++i)
+  {
+    for (int j = 0; j < 4; ++j)
+    {
+      if (checkLineSegmentCrossing(f1.getPoint(i), f1.getPoint((i + 1) % 4), f2.getPoint(j), f2.getPoint((j + 1) % 4)))
+      {
+        return true;
+      }
+    }
+  }
+
+  // Проверка пересечения вершин ромбов
+  for (int i = 0; i < 4; ++i)
+  {
+    if (isPointInside(f2, f1.getPoint(i)))
+    {
+      return true;
+    }
+  }
+  for (int i = 0; i < 4; ++i)
+  {
+    if (isPointInside(f1, f2.getPoint(i)))
+    {
+      return true;
+    }
+  }
+
+  return false;
 }

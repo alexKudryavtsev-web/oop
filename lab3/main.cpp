@@ -4,6 +4,8 @@
 #include <iostream>
 #include "point.h"
 #include "rhomb.h"
+#include "utils.h"
+#include "tests.h"
 
 using namespace std;
 
@@ -14,10 +16,6 @@ void handleGetMaxCirclePoint();
 void handleCheckFigureCrossing();
 
 void testGetPointsInLine();
-
-void testGetMaxCirclePoint();
-
-void testCheckFigureCrossing();
 
 int main()
 {
@@ -83,6 +81,11 @@ void handleGetPointsInLine()
   int n;
   cout << "Укажите кол-во точек: ";
   cin >> n;
+  if (!checkCorrectInput())
+  {
+    cout << "Введите корректное число" << endl;
+    return;
+  }
 
   Point *arr = new Point[n];
 
@@ -114,10 +117,25 @@ void handleGetMaxCirclePoint()
   int n;
   cout << "Укажите кол-во точек: ";
   cin >> n;
+  if (!checkCorrectInput())
+  {
+    cout << "Введите корректное число" << endl;
+    return;
+  }
 
+  if (n <= 0)
+  {
+    cout << "Введите натуральное число" << endl;
+    return;
+  }
   double r;
   cout << "Укажите радиус: ";
   cin >> r;
+  if (!checkCorrectInput())
+  {
+    cout << "Введите корректное число" << endl;
+    return;
+  }
 
   Point *arr = new Point[n];
 
@@ -141,24 +159,39 @@ void handleCheckFigureCrossing()
 {
   double x, y;
 
-  cout << "Введите 3 вершины первого ромба:\n";
+  cout << "Введите 4 вершины первого ромба:\n";
   cin >> x >> y;
   Point p1{x, y};
   cin >> x >> y;
   Point p2{x, y};
   cin >> x >> y;
   Point p3{x, y};
-  Rhomb r1{p1, p2, p3};
-
-  cout << "Введите 3 вершины второго ромба:\n";
   cin >> x >> y;
   Point p4{x, y};
+  Rhomb r1{p1, p2, p3, p4};
+
+  if (!r1.isValid())
+  {
+    cout << "Введенем некорректный ромб\n";
+    return;
+  }
+
+  cout << "Введите 4 вершины второго ромба:\n";
   cin >> x >> y;
   Point p5{x, y};
   cin >> x >> y;
   Point p6{x, y};
+  cin >> x >> y;
+  Point p7{x, y};
+  cin >> x >> y;
+  Point p8{x, y};
 
-  Rhomb r2{p4, p5, p6};
+  Rhomb r2{p5, p6, p7, p8};
+  if (!r2.isValid())
+  {
+    cout << "Введенем некорректный ромб\n";
+    return;
+  }
 
   bool result = checkFigureCrossing(r1, r2);
 
@@ -194,54 +227,12 @@ void testGetPointsInLine()
     cout << arr[res[i]] << " ";
   }
   cout << endl;
-}
 
-void testGetMaxCirclePoint()
-{
-  int n = 6;
-  int r = 2;
-  Point arr[] = {{2, 3},
-                 {2, 2},
-                 {1, 3},
-                 {2, 4},
-                 {3, 3},
-                 {5, 1}};
+  cout << "Проверка массива, состоящего из одинаковых элементов" << endl;
+  n = 3;
+  Point arr1[] = {{1, 1},
+                  {1, 1},
+                  {1, 1}};
 
-  cout << "Радиус " << r << ", точки: ";
-
-  for (int i = 0; i < n; i++)
-  {
-    cout << arr[i] << " ";
-  }
-  cout << endl;
-
-  Point p = getMaxCirclePoint(arr, n, r);
-
-  cout << "Точка: " << p << endl;
-}
-
-void testCheckFigureCrossing()
-{
-  Point p1{0, 0};
-  Point p2{1, 2};
-  Point p3{2, 0};
-  Rhomb r1{p1, p2, p3};
-  cout << "Первый ромб: " << p1 << ", " << p2 << ", " << p3 << endl;
-
-  Point p4{1, 0};
-  Point p5{5, 0};
-  Point p6{3, 1};
-  Rhomb r2{p4, p5, p6};
-  cout << "Второй ромб: " << p4 << ", " << p5 << ", " << p6 << endl;
-
-  bool result = checkFigureCrossing(r1, r2);
-
-  if (result)
-  {
-    cout << "Ромбы пересекаются." << endl;
-  }
-  else
-  {
-    cout << "Ромбы не пересекаются." << endl;
-  }
+  cout << getPointsInLine(arr1, n, &res) << endl;
 }
