@@ -2,6 +2,7 @@
 #include <iostream>
 #include "MaxHeap.h"
 #include "MaxHeap.cpp"
+#include "MaxHeap_test.cpp"
 
 using namespace std;
 
@@ -128,13 +129,23 @@ int main()
     }
     case 8:
       return 0;
+    case 9:
+    {
+      testAdd();
+      testGet();
+      testPeek();
+      testCount();
+      testContains();
+
+      std::cout << "Все тесты пройдены успешно!" << std::endl;
+      break;
+    }
     default:
       cout << "Такой опции нет, попробуйте еще раз!" << endl;
     }
   }
   return 0;
 }
-
 
 void showMenu()
 {
@@ -148,4 +159,5 @@ void showMenu()
   cout << "6. Выполнить операции объединения, разности и пересечения" << endl;
   cout << "7. Выполнить операции сравнения" << endl;
   cout << "8. Выход" << endl;
+  cout << "9. Запустить тесты" << endl;
 }
