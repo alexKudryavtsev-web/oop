@@ -25,13 +25,33 @@ int main()
   cat.setIsWild(false);
   cout << cat.toString() << endl;
 
-  Dog dog("Бим", 10, 3, "коричневый", false);
-  cout << dog.toString() << endl;
+  cout << Cat::getCatCount() << endl;
 
-  People person("Иван", 80.5, 35, "Россия");
-  cout << person.toString() << std::endl;
-  cout << "Страна: " << person.getCountry() << std::endl;
+  {
+    Cat c("d", 1, 1, "", false);
+    cout << Cat::getCatCount() << endl;
+  }
 
+  cout << Cat::getCatCount() << endl;
+  {
+    Dog dog("Бим", 10, 3, "коричневый", false);
+    cout << dog.toString() << endl;
+
+    cout << Dog::getDogCount() << endl;
+  }
+
+  cout << Dog::getDogCount() << endl;
+
+  {
+    cout << People::getPeopleCount() << endl;
+    People person("Иван", 80.5, 35, "Россия");
+    cout << person.toString() << std::endl;
+    cout << "Страна: " << person.getCountry() << std::endl;
+
+    cout << People::getPeopleCount() << endl;
+  }
+
+  cout << People::getPeopleCount() << endl;
   Turtle turtle("Крутая", 1, 1);
   cout << turtle.toString() << std::endl;
 

@@ -1,10 +1,13 @@
 #include "People.h"
 
+int People::peopleCount = 0;
+
 People::People(std::string name, double weight, int age, const std::string &country) : country(country)
 {
   setName(name);
   setWeight(weight);
   setAge(age);
+  People::peopleCount++;
 }
 
 std::string People::toString() const
@@ -15,4 +18,13 @@ std::string People::toString() const
 std::string People::getCountry() const
 {
   return country;
+}
+
+People::~People()
+{
+  peopleCount--;
+}
+int People::getPeopleCount()
+{
+  return People::peopleCount;
 }
