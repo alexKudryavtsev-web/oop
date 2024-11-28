@@ -4,6 +4,9 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <numeric>
+#include <functional>
+#include <limits>
 
 #include "island.h"
 #include "island.cpp"
@@ -25,7 +28,7 @@ int main()
 
   int v = (int('K') + int('A')) % 8;
 
-  std::vector<Island> islands;
+  vector<Island> islands;
 
   cout << "Вариант: " << v << endl;
 
@@ -35,13 +38,13 @@ int main()
   do
   {
     cout << "Введите команду: ";
-    std::cin >> choice;
+    cin >> choice;
 
-    if (std::cin.fail())
+    if (cin.fail())
     {
-      std::cout << "Некорректный ввод. Пожалуйста, введите число.\n";
-      std::cin.clear();
-      std::cin.ignore(255, '\n');
+      cout << "Некорректный ввод. Пожалуйста, введите число.\n";
+      cin.clear();
+      cin.ignore(255, '\n');
       continue;
     }
 
@@ -68,27 +71,27 @@ int main()
       cin >> population;
 
       islands.emplace_back(name, area, population);
-      std::cout << "Остров добавлен!\n";
+      cout << "Остров добавлен!\n";
       break;
     }
     case 3:
     {
       if (islands.empty())
       {
-        std::cout << "Список пустой.\n";
+        cout << "Список пустой.\n";
         break;
       }
-      std::cout << "Введите номер острова для удаления (с 1): ";
+      cout << "Введите номер острова для удаления (с 1): ";
       int index;
-      std::cin >> index;
+      cin >> index;
       if (index > 0 && index <= islands.size())
       {
         islands.erase(islands.begin() + index - 1);
-        std::cout << "Остров удален!\n";
+        cout << "Остров удален!\n";
       }
       else
       {
-        std::cout << "Неверный номер острова.\n";
+        cout << "Неверный номер острова.\n";
       }
       break;
     }
@@ -96,12 +99,12 @@ int main()
     {
       if (islands.empty())
       {
-        std::cout << "Список пустой.\n";
+        cout << "Список пустой.\n";
         break;
       }
       for (size_t i = 0; i < islands.size(); ++i)
       {
-        std::cout << i + 1 << ". " << islands[i] << "\n";
+        cout << i + 1 << ". " << islands[i] << "\n";
       }
       break;
     }
@@ -109,48 +112,48 @@ int main()
     {
       if (islands.empty())
       {
-        std::cout << "Список пустой.\n";
+        cout << "Список пустой.\n";
         break;
       }
       int sort_choice;
-      std::cout << "Выберите характеристику для сортировки:\n";
-      std::cout << "1. По имени\n";
-      std::cout << "2. По площади\n";
-      std::cout << "3. По населению\n";
-      std::cin >> sort_choice;
+      cout << "Выберите характеристику для сортировки:\n";
+      cout << "1. По имени\n";
+      cout << "2. По площади\n";
+      cout << "3. По населению\n";
+      cin >> sort_choice;
       switch (sort_choice)
       {
       case 1:
-        std::sort(islands.begin(), islands.end(), compareByName);
+        sort(islands.begin(), islands.end(), compareByName);
         break;
       case 2:
-        std::sort(islands.begin(), islands.end(), compareByArea);
+        sort(islands.begin(), islands.end(), compareByArea);
         break;
       case 3:
-        std::sort(islands.begin(), islands.end(), compareByPopulation);
+        sort(islands.begin(), islands.end(), compareByPopulation);
         break;
       default:
-        std::cout << "Неверный выбор.\n";
+        cout << "Неверный выбор.\n";
       }
-      std::cout << "Острова отсортированы!\n";
+      cout << "Острова отсортированы!\n";
       break;
     }
     case 6:
     {
       if (islands.empty())
       {
-        std::cout << "Список пустой.\n";
+        cout << "Список пустой.\n";
         break;
       }
       int agg_choice, characteristic_choice;
-      std::cout << "Выберите функцию:\n";
-      std::cout << "1. Сумма\n";
-      std::cout << "2. Среднее\n";
-      std::cin >> agg_choice;
-      std::cout << "Выберите характеристику:\n";
-      std::cout << "1. Площадь\n";
-      std::cout << "2. Население\n";
-      std::cin >> characteristic_choice;
+      cout << "Выберите функцию:\n";
+      cout << "1. Сумма\n";
+      cout << "2. Среднее\n";
+      cin >> agg_choice;
+      cout << "Выберите характеристику:\n";
+      cout << "1. Площадь\n";
+      cout << "2. Население\n";
+      cin >> characteristic_choice;
 
       double sum = 0;
       if (characteristic_choice == 1)
@@ -166,11 +169,101 @@ int main()
 
       if (agg_choice == 1)
       {
-        std::cout << "Суммарное значение: " << sum << std::endl;
+        cout << "Суммарное значение: " << sum << endl;
       }
       else
       {
-        std::cout << "Среднее значение: " << sum / islands.size() << std::endl;
+        cout << "Среднее значение: " << sum / islands.size() << endl;
+      }
+      break;
+    }
+    case 7:
+    {
+      if (islands.empty())
+      {
+        cout << "Список пустой.\n";
+        break;
+      }
+      int characteristic_choice;
+      double threshold;
+      cout << "Выберите характеристику для отбора:\n";
+      cout << "1. Площадь\n";
+      cout << "2. Население\n";
+      cin >> characteristic_choice;
+      cout << "Введите пороговое значение: ";
+      cin >> threshold;
+
+      auto filtered_islands = [](const Island &i, double t, int c)
+      {
+        return (c == 1) ? i.getArea() > t : i.getPopulation() > t;
+      };
+
+      vector<Island> result;
+      copy_if(islands.begin(), islands.end(), back_inserter(result),
+              [&](const Island &i)
+              { return filtered_islands(i, threshold, characteristic_choice); });
+
+      if (result.empty())
+      {
+        cout << "Островов, удовлетворяющих условию, нет.\n";
+      }
+      else
+      {
+        for (size_t i = 0; i < result.size(); ++i)
+        {
+          cout << i + 1 << ". " << result[i] << "\n";
+        }
+      }
+      break;
+    }
+    case 8:
+    {
+      if (islands.empty())
+      {
+        cout << "Список островов пуст.\n";
+        break;
+      }
+      int characteristic_choice;
+      double value;
+      cout << "Выберите характеристику для поиска:\n";
+      cout << "1. Площадь\n";
+      cout << "2. Население\n";
+      cin >> characteristic_choice;
+
+      // Проверка на корректность ввода characteristic_choice
+      if (cin.fail() || (characteristic_choice != 1 && characteristic_choice != 2))
+      {
+        cout << "Некорректный ввод. Пожалуйста, введите 1 или 2.\n";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        continue;
+      }
+
+      cout << "Введите значение: ";
+      cin >> value;
+      // Проверка на корректность ввода value
+      if (cin.fail())
+      {
+        cout << "Некорректный ввод. Пожалуйста, введите число.\n";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        continue;
+      }
+
+      auto it = find_if(islands.begin(), islands.end(),
+                        [&](const Island &i)
+                        {
+                          return (characteristic_choice == 1) ? i.getArea() == value : i.getPopulation() == value;
+                        });
+
+      if (it != islands.end())
+      {
+        cout << "Найденный остров:\n";
+        cout << *it << endl; // Используем перегруженный оператор << для вывода
+      }
+      else
+      {
+        cout << "Остров с таким значением не найден.\n";
       }
       break;
     }
@@ -182,5 +275,3 @@ int main()
 
   return 0;
 }
-
-void handleCommand() {}
