@@ -7,6 +7,8 @@
 #include <numeric>
 #include <functional>
 #include <limits>
+#include <fstream>
+#include <sstream>
 
 #include "island.h"
 #include "island.cpp"
@@ -19,8 +21,6 @@ using namespace std;
 bool compareByName(const Island &a, const Island &b) { return a.getName() < b.getName(); }
 bool compareByArea(const Island &a, const Island &b) { return a.getArea() < b.getArea(); }
 bool compareByPopulation(const Island &a, const Island &b) { return a.getPopulation() < b.getPopulation(); }
-
-void handleCommand();
 
 int main()
 {
@@ -265,6 +265,24 @@ int main()
       {
         cout << "Остров с таким значением не найден.\n";
       }
+      break;
+    }
+    case 9:
+    { // Запись в файл
+      std::string filename;
+      std::cout << "Введите имя файла для записи: ";
+      std::cin >> filename;
+
+      saveIslandsToFile(islands, filename);
+      break;
+    }
+    case 10:
+    { // Запись в файл
+      std::string filename;
+      std::cout << "Введите имя файла для чтения: ";
+      std::cin >> filename;
+
+      loadIslandsFromFile(islands, filename);
       break;
     }
     default:
