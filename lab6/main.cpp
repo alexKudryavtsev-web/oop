@@ -17,11 +17,6 @@
 
 using namespace std;
 
-// Компараторы
-bool compareByName(const Island &a, const Island &b) { return a.getName() < b.getName(); }
-bool compareByArea(const Island &a, const Island &b) { return a.getArea() < b.getArea(); }
-bool compareByPopulation(const Island &a, const Island &b) { return a.getPopulation() < b.getPopulation(); }
-
 int main()
 {
   setlocale(LC_ALL, "Russian");
@@ -155,10 +150,8 @@ int main()
       std::cout << "2. Население\n";
       std::cin >> characteristic_choice;
 
-      auto compare_func = (characteristic_choice == 1) ? compareByArea : compareByPopulation;
-      auto it = (extremum_choice == 1) ? std::min_element(islands.begin(), islands.end(), compare_func) : std::max_element(islands.begin(), islands.end(), compare_func);
-
-      std::cout << "Экстремальное значение: " << *it << std::endl;
+      auto res = getExtremumValue(islands, extremum_choice, characteristic_choice);
+      std::cout << "Экстремальное значение: " << res << std::endl;
 
       break;
     }
@@ -300,6 +293,7 @@ int main()
     case 12:
     {
       testAggregateIslands();
+      testExtremumValue();
       break;
     }
     default:

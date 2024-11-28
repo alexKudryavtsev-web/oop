@@ -7,6 +7,11 @@
 #include "utils.h"
 #include "island.h"
 
+// Компараторы
+bool compareByName(const Island &a, const Island &b) { return a.getName() < b.getName(); }
+bool compareByArea(const Island &a, const Island &b) { return a.getArea() < b.getArea(); }
+bool compareByPopulation(const Island &a, const Island &b) { return a.getPopulation() < b.getPopulation(); }
+
 void printMenu()
 {
   std::string menu = "Меню:\n\t"
@@ -107,7 +112,7 @@ void testAggregateIslands()
   islands.emplace_back("Island2", 20.0, 200);
   islands.emplace_back("Island3", 30.0, 300);
 
-  // Test case 1: Нормальный вектор 
+  // Test case 1: Нормальный вектор
   assert(aggregateIslands(islands, 1, 1) == 60.0);
   assert(aggregateIslands(islands, 2, 1) == 20.0);
   assert(aggregateIslands(islands, 1, 2) == 600);
@@ -117,6 +122,8 @@ void testAggregateIslands()
   std::vector<Island> emptyIslands;
   assert(aggregateIslands(emptyIslands, 1, 1) == 0.0);
   assert(aggregateIslands(emptyIslands, 2, 1) == 0.0);
+  assert(aggregateIslands(emptyIslands, 1, 2) == 0.0);
+  assert(aggregateIslands(emptyIslands, 2, 2) == 0.0);
 
   // Test case 6: Вектор с одним значением
   std::vector<Island> oneIsland;
@@ -126,5 +133,62 @@ void testAggregateIslands()
   assert(aggregateIslands(oneIsland, 1, 2) == 1000);
   assert(aggregateIslands(oneIsland, 2, 2) == 1000);
 
-  std::cout << "All test cases passed!" << std::endl;
+  std::cout << "testAggregateIslands: All test cases passed!" << std::endl;
+}
+
+Island getExtremumValue(const std::vector<Island> &islands, int extremum_choice, int characteristic_choice)
+{
+  if (islands.empty())
+  {
+    return Island();
+  }
+  auto compare_func = (characteristic_choice == 1) ? compareByArea : compareByPopulation;
+  auto it = (extremum_choice == 1) ? std::min_element(islands.begin(), islands.end(), compare_func) : std::max_element(islands.begin(), islands.end(), compare_func);
+
+  return *it;
+}
+
+void testExtremumValue()
+{
+  std::vector<Island> islands;
+  islands.emplace_back("Island1", 10.0, 100);
+  islands.emplace_back("Island2", 20.0, 200);
+  islands.emplace_back("Island3", 30.0, 300);
+
+  // Min Area
+  Island minArea = getExtremumValue(islands, 1, 1);
+  assert(minArea.getArea() == 10.0);
+  // Max Area
+  Island maxArea = getExtremumValue(islands, 2, 1);
+  assert(maxArea.getArea() == 30.0);
+  // Min Population
+  Island minPop = getExtremumValue(islands, 1, 2);
+  assert(minPop.getPopulation() == 100);
+  // Max Population
+  Island maxPop = getExtremumValue(islands, 2, 2);
+  assert(maxPop.getPopulation() == 300);
+
+  // Test with empty vector
+  std::vector<Island> emptyIslands;
+  Island emptyResult1 = getExtremumValue(emptyIslands, 1, 1);
+  assert(emptyResult1.getArea() == 0.0 && emptyResult1.getPopulation() == 0);
+
+  Island emptyResult2 = getExtremumValue(emptyIslands, 2, 1);
+  assert(emptyResult2.getArea() == 0.0 && emptyResult2.getPopulation() == 0);
+
+  Island emptyResult3 = getExtremumValue(emptyIslands, 1, 2);
+  assert(emptyResult3.getArea() == 0.0 && emptyResult3.getPopulation() == 0);
+
+  Island emptyResult4 = getExtremumValue(emptyIslands, 2, 2);
+  assert(emptyResult4.getArea() == 0.0 && emptyResult4.getPopulation() == 0);
+
+  // Test with one island
+  std::vector<Island> oneIsland;
+  oneIsland.emplace_back("Island1", 100.0, 1000);
+  assert(getExtremumValue(oneIsland, 1, 1).getArea() == 100.0);
+  assert(getExtremumValue(oneIsland, 2, 1).getArea() == 100.0);
+  assert(getExtremumValue(oneIsland, 1, 2).getPopulation() == 1000);
+  assert(getExtremumValue(oneIsland, 2, 2).getPopulation() == 1000);
+
+  std::cout << "testExtremumValue: All test cases passed!" << std::endl;
 }
