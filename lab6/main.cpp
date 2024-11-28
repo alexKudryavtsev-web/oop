@@ -297,6 +297,11 @@ int main()
       loadIslandsFromFile(islands, filename);
       break;
     }
+    case 12:
+    {
+      testAggregateIslands();
+      break;
+    }
     default:
       cout << "Неверный выбор.\n";
       break;

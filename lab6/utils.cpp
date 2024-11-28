@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <iostream>
+#include <cassert>
 
 #include "utils.h"
 #include "island.h"
@@ -20,7 +21,8 @@ void printMenu()
                      "8  - фильтр по пороговому значению\n\t"
                      "9  - поиск элемента по характеристики\n\t"
                      "10 - запись в файл\n\t"
-                     "11 - чтение из файла";
+                     "11 - чтение из файла\n\t"
+                     "12 - запуск автотестов";
   std::cout << menu << std::endl;
 }
 
@@ -61,7 +63,7 @@ void loadIslandsFromFile(std::vector<Island> &islands, const std::string &filePa
   {
     if (inFile >> area >> population)
     {
-      inFile.ignore(); // Игнорируем символ новой строки после числа
+      inFile.ignore();
       islands.emplace_back(name, area, population);
     }
   }
@@ -71,6 +73,11 @@ void loadIslandsFromFile(std::vector<Island> &islands, const std::string &filePa
 
 double aggregateIslands(const std::vector<Island> &islands, int agg_choice, int characteristic_choice)
 {
+  if (islands.empty())
+  {
+    return 0;
+  }
+
   double sum = 0;
   if (characteristic_choice == 1)
   {
@@ -91,4 +98,33 @@ double aggregateIslands(const std::vector<Island> &islands, int agg_choice, int 
   {
     return sum / islands.size();
   }
+}
+
+void testAggregateIslands()
+{
+  std::vector<Island> islands;
+  islands.emplace_back("Island1", 10.0, 100);
+  islands.emplace_back("Island2", 20.0, 200);
+  islands.emplace_back("Island3", 30.0, 300);
+
+  // Test case 1: Нормальный вектор 
+  assert(aggregateIslands(islands, 1, 1) == 60.0);
+  assert(aggregateIslands(islands, 2, 1) == 20.0);
+  assert(aggregateIslands(islands, 1, 2) == 600);
+  assert(aggregateIslands(islands, 2, 2) == 200);
+
+  // Test case 5: Пустой вектор
+  std::vector<Island> emptyIslands;
+  assert(aggregateIslands(emptyIslands, 1, 1) == 0.0);
+  assert(aggregateIslands(emptyIslands, 2, 1) == 0.0);
+
+  // Test case 6: Вектор с одним значением
+  std::vector<Island> oneIsland;
+  oneIsland.emplace_back("Island1", 100.0, 1000);
+  assert(aggregateIslands(oneIsland, 1, 1) == 100.0);
+  assert(aggregateIslands(oneIsland, 2, 1) == 100.0);
+  assert(aggregateIslands(oneIsland, 1, 2) == 1000);
+  assert(aggregateIslands(oneIsland, 2, 2) == 1000);
+
+  std::cout << "All test cases passed!" << std::endl;
 }
