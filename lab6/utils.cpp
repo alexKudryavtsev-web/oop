@@ -105,6 +105,7 @@ double aggregateIslands(const std::vector<Island> &islands, int agg_choice, int 
   }
 }
 
+// 16 тестов
 void testAggregateIslands()
 {
   std::vector<Island> islands;
@@ -148,6 +149,7 @@ Island getExtremumValue(const std::vector<Island> &islands, int extremum_choice,
   return *it;
 }
 
+// 16 тестов
 void testExtremumValue()
 {
   std::vector<Island> islands;
@@ -168,7 +170,7 @@ void testExtremumValue()
   Island maxPop = getExtremumValue(islands, 2, 2);
   assert(maxPop.getPopulation() == 300);
 
-  // Test with empty vector
+  // Пустой вектор
   std::vector<Island> emptyIslands;
   Island emptyResult1 = getExtremumValue(emptyIslands, 1, 1);
   assert(emptyResult1.getArea() == 0.0 && emptyResult1.getPopulation() == 0);
@@ -182,7 +184,7 @@ void testExtremumValue()
   Island emptyResult4 = getExtremumValue(emptyIslands, 2, 2);
   assert(emptyResult4.getArea() == 0.0 && emptyResult4.getPopulation() == 0);
 
-  // Test with one island
+  // Вектор с одним значением
   std::vector<Island> oneIsland;
   oneIsland.emplace_back("Island1", 100.0, 1000);
   assert(getExtremumValue(oneIsland, 1, 1).getArea() == 100.0);
@@ -191,4 +193,54 @@ void testExtremumValue()
   assert(getExtremumValue(oneIsland, 2, 2).getPopulation() == 1000);
 
   std::cout << "testExtremumValue: All test cases passed!" << std::endl;
+}
+
+std::vector<Island> filterByValue(const std::vector<Island> &islands, double threshold, int characteristic_choice)
+{
+  if(islands.empty()) {
+    return islands;
+  }
+  auto filtered_islands = [](const Island &i, double t, int c)
+  {
+    return (c == 1) ? i.getArea() > t : i.getPopulation() > t;
+  };
+
+  std::vector<Island> result;
+  copy_if(islands.begin(), islands.end(), back_inserter(result),
+          [&](const Island &i)
+          { return filtered_islands(i, threshold, characteristic_choice); });
+
+  return result;
+}
+
+// 8 тестов
+void testFilterByValue()
+{
+  std::vector<Island> islands;
+  islands.emplace_back("Island1", 10.0, 100);
+  islands.emplace_back("Island2", 20.0, 200);
+  islands.emplace_back("Island3", 30.0, 300);
+  islands.emplace_back("Island4", 40.0, 400);
+
+  // По площади
+  std::vector<Island> filteredByArea = filterByValue(islands, 25.0, 1);
+  assert(filteredByArea.size() == 2);
+  assert(filteredByArea[0].getArea() == 30.0);
+  assert(filteredByArea[1].getArea() == 40.0);
+  // По населению
+  std::vector<Island> filteredByPopulation = filterByValue(islands, 350, 2);
+  assert(filteredByPopulation.size() == 1);
+  assert(filteredByPopulation[0].getPopulation() == 400);
+  assert(filteredByPopulation[0].getArea() == 40.0);
+
+  // Пустой
+  std::vector<Island> emptyIslands;
+  std::vector<Island> filteredEmpty = filterByValue(emptyIslands, 10, 1);
+  assert(filteredEmpty.empty());
+
+  // Ни один не подходит
+  std::vector<Island> noMatches = filterByValue(islands, 1000, 1);
+  assert(noMatches.empty());
+
+  std::cout << "testFilterByValue: All test cases passed!" << std::endl;
 }

@@ -198,15 +198,7 @@ int main()
       cout << "Введите пороговое значение: ";
       cin >> threshold;
 
-      auto filtered_islands = [](const Island &i, double t, int c)
-      {
-        return (c == 1) ? i.getArea() > t : i.getPopulation() > t;
-      };
-
-      vector<Island> result;
-      copy_if(islands.begin(), islands.end(), back_inserter(result),
-              [&](const Island &i)
-              { return filtered_islands(i, threshold, characteristic_choice); });
+      auto result = filterByValue(islands, threshold, characteristic_choice);
 
       if (result.empty())
       {
@@ -294,6 +286,7 @@ int main()
     {
       testAggregateIslands();
       testExtremumValue();
+      testFilterByValue();
       break;
     }
     default:
