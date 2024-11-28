@@ -142,6 +142,30 @@ int main()
     {
       if (islands.empty())
       {
+        std::cout << "Список пустой.\n";
+        break;
+      }
+      int extremum_choice, characteristic_choice;
+      std::cout << "Выберите экстремум:\n";
+      std::cout << "1. Минимум\n";
+      std::cout << "2. Максимум\n";
+      std::cin >> extremum_choice;
+      std::cout << "Выберите характеристику:\n";
+      std::cout << "1. Площадь\n";
+      std::cout << "2. Население\n";
+      std::cin >> characteristic_choice;
+
+      auto compare_func = (characteristic_choice == 1) ? compareByArea : compareByPopulation;
+      auto it = (extremum_choice == 1) ? std::min_element(islands.begin(), islands.end(), compare_func) : std::max_element(islands.begin(), islands.end(), compare_func);
+
+      std::cout << "Экстремальное значение: " << *it << std::endl;
+
+      break;
+    }
+    case 7:
+    {
+      if (islands.empty())
+      {
         cout << "Список пустой.\n";
         break;
       }
@@ -165,7 +189,7 @@ int main()
       }
       break;
     }
-    case 7:
+    case 8:
     {
       if (islands.empty())
       {
@@ -204,7 +228,7 @@ int main()
       }
       break;
     }
-    case 8:
+    case 9:
     {
       if (islands.empty())
       {
@@ -255,7 +279,7 @@ int main()
       }
       break;
     }
-    case 9:
+    case 10:
     { // Запись в файл
       std::string filename;
       std::cout << "Введите имя файла для записи: ";
@@ -264,7 +288,7 @@ int main()
       saveIslandsToFile(islands, filename);
       break;
     }
-    case 10:
+    case 11:
     { // Запись в файл
       std::string filename;
       std::cout << "Введите имя файла для чтения: ";
