@@ -155,25 +155,13 @@ int main()
       cout << "2. Население\n";
       cin >> characteristic_choice;
 
-      double sum = 0;
-      if (characteristic_choice == 1)
-      {
-        for (const auto &island : islands)
-          sum += island.getArea();
-      }
-      else
-      {
-        for (const auto &island : islands)
-          sum += island.getPopulation();
-      }
-
       if (agg_choice == 1)
       {
-        cout << "Суммарное значение: " << sum << endl;
+        cout << "Суммарное значение: " << aggregateIslands(islands, agg_choice, characteristic_choice) << endl;
       }
       else
       {
-        cout << "Среднее значение: " << sum / islands.size() << endl;
+        cout << "Среднее значение: " << aggregateIslands(islands, agg_choice, characteristic_choice) << endl;
       }
       break;
     }

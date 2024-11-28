@@ -15,7 +15,7 @@ void printMenu()
                      "3 - удалить элемент\n\t"
                      "4 - вывести список\n\t"
                      "5 - сортировать список\n\t"
-                     "6 - поиск макс. или мин. элемента\n\t"
+                     "6 - агрегировать по характеристике\n\t"
                      "7 - фильтр по пороговому значению\n\t"
                      "8 - поиск элемента по характеристики\n\t"
                      "9 - запись в файл\n\t"
@@ -66,4 +66,28 @@ void loadIslandsFromFile(std::vector<Island> &islands, const std::string &filePa
   }
 
   inFile.close();
+}
+
+double aggregateIslands(const std::vector<Island> &islands, int agg_choice, int characteristic_choice)
+{
+  double sum = 0;
+  if (characteristic_choice == 1)
+  {
+    for (const auto &island : islands)
+      sum += island.getArea();
+  }
+  else
+  {
+    for (const auto &island : islands)
+      sum += island.getPopulation();
+  }
+
+  if (agg_choice == 1)
+  {
+    return sum;
+  }
+  else
+  {
+    return sum / islands.size();
+  }
 }
