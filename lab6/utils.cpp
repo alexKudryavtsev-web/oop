@@ -76,6 +76,32 @@ void loadIslandsFromFile(std::vector<Island> &islands, const std::string &filePa
   inFile.close();
 }
 
+// 13 тестов
+// Для этого теста замокан файл test-set.txt!
+void testLoadIslandsFromFile()
+{
+  std::vector<Island> res;
+  std::string testDataSet = "test-set.txt";
+
+  loadIslandsFromFile(res, testDataSet);
+
+  assert(res.size() == 3);
+
+  assert(res[0].getName() == "Island1");
+  assert(res[0].getPopulation() == 100);
+  assert(res[0].getArea() == 10);
+
+  assert(res[1].getName() == "Island2");
+  assert(res[1].getPopulation() == 200);
+  assert(res[1].getArea() == 20);
+
+  assert(res[2].getName() == "Island3");
+  assert(res[2].getPopulation() == 300);
+  assert(res[2].getArea() == 30);
+
+  std::cout << "testLoadIslandsFromFile: All test cases passed!" << std::endl;
+}
+
 double aggregateIslands(const std::vector<Island> &islands, int agg_choice, int characteristic_choice)
 {
   if (islands.empty())
@@ -197,7 +223,8 @@ void testExtremumValue()
 
 std::vector<Island> filterByValue(const std::vector<Island> &islands, double threshold, int characteristic_choice)
 {
-  if(islands.empty()) {
+  if (islands.empty())
+  {
     return islands;
   }
   auto filtered_islands = [](const Island &i, double t, int c)

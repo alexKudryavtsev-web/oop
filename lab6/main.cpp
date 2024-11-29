@@ -287,6 +287,7 @@ int main()
       testAggregateIslands();
       testExtremumValue();
       testFilterByValue();
+      testLoadIslandsFromFile();
       break;
     }
     default:
