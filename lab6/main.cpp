@@ -59,7 +59,7 @@ int main()
       cout << "Укажите название: ";
       cin >> name;
 
-      cout << "Укажите площадь в м^2: ";
+      cout << "Укажите площадь в км^2: ";
       cin >> area;
 
       cout << "Укажите численность населения: ";
@@ -227,7 +227,6 @@ int main()
       cout << "2. Население\n";
       cin >> characteristic_choice;
 
-      // Проверка на корректность ввода characteristic_choice
       if (cin.fail() || (characteristic_choice != 1 && characteristic_choice != 2))
       {
         cout << "Некорректный ввод. Пожалуйста, введите 1 или 2.\n";
@@ -238,7 +237,6 @@ int main()
 
       cout << "Введите значение: ";
       cin >> value;
-      // Проверка на корректность ввода value
       if (cin.fail())
       {
         cout << "Некорректный ввод. Пожалуйста, введите число.\n";
@@ -256,7 +254,7 @@ int main()
       if (it != islands.end())
       {
         cout << "Найденный остров:\n";
-        cout << *it << endl; // Используем перегруженный оператор << для вывода
+        cout << *it << endl;
       }
       else
       {
@@ -265,7 +263,7 @@ int main()
       break;
     }
     case 10:
-    { // Запись в файл
+    {
       std::string filename;
       std::cout << "Введите имя файла для записи: ";
       std::cin >> filename;
@@ -274,7 +272,7 @@ int main()
       break;
     }
     case 11:
-    { // Запись в файл
+    {
       std::string filename;
       std::cout << "Введите имя файла для чтения: ";
       std::cin >> filename;
