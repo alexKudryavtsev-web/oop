@@ -65,6 +65,12 @@ int main()
     case 5:
       printAnimalInfo(animals, size);
       break;
+    case 6:
+      processCountObjectsOfEachType(animals, size);
+      break;
+    case 7:
+      processCountObjectsOfType(animals, size);
+      break;
     default:
       cout << "Такой команды нет.\n";
       break;
