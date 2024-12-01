@@ -62,6 +62,9 @@ int main()
     case 4:
       printAnimals(animals, size);
       break;
+    case 5:
+      printAnimalInfo(animals, size);
+      break;
     default:
       cout << "Такой команды нет.\n";
       break;
