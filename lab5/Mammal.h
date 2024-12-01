@@ -14,5 +14,7 @@ public:
 
   std::string getFurColor() const;
 
-  void setFurColor(const std::string& furColor);
+  void setFurColor(const std::string &furColor);
+
+  virtual ~Mammal() = default;
 };

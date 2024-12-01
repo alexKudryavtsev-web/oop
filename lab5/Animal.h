@@ -5,7 +5,7 @@ class Animal
 {
 private:
   double weight; // вес в килограммах
-  int age; // возраст в годах
+  int age;       // возраст в годах
   std::string name;
 
 public:
@@ -18,5 +18,7 @@ public:
   void setAge(int value);
 
   std::string getName() const;
-  void setName(const std::string& value);
+  void setName(const std::string &value);
+
+  virtual ~Animal() = default;
 };
